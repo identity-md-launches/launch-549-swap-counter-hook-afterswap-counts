@@ -1,0 +1,21 @@
+{
+  "kind": "univ4_hook",
+  "hook": {
+    "contract": "SwapCounterHook",
+    "constructorArgs": ["$poolManager"],
+    "permissions": ["beforeInitialize", "afterSwap"]
+  },
+  "token": {
+    "contract": "SwapCounterToken",
+    "name": "Swap Counter",
+    "symbol": "SWAPC",
+    "decimals": 18
+  },
+  "pool": {
+    "pairedCurrency": "0x0000000000000000000000000000000000000000",
+    "fee": 3000,
+    "tickSpacing": 60,
+    "initialPrice": "79228162514264337593543950336"
+  },
+  "notes": "SwapCounterHook inherits BaseHook. Only the immutable PoolManager may call its callbacks. beforeInitialize returns its selector without changing counts. Each successful afterSwap increments swapCount(sender) and totalSwaps(), emits SwapCounted(sender, poolId, senderCount, totalCount), and returns the afterSwap selector with zero delta. These public views expose counts across all pools using the hook. The sender is the direct caller of PoolManager.swap, typically a router, not necessarily an end user. Reverted transactions roll back counts and events. All other permissions, including all return-delta permissions, are disabled; the hook does not change swap amounts or fees. Its sole constructor argument resolves to the launch chain's PoolManager, which must have deployed code. The hook address must carry permission bits 0x2040. SwapCounterToken has no constructor arguments. This native ETH/token pool uses fee 3000 (0.3%), tick spacing 60 and initial sqrtPriceX96 2^96, giving a 1:1 currency1/currency0 ratio in base units. These pool parameters are chosen from the repository's test fixtures because no separate launch values were specified."
+}
